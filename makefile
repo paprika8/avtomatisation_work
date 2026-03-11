@@ -3,11 +3,10 @@ HDR := $(shell find . -name '*.h')
 SRC_NAME := $(subst ./,/,$(SRC))
 OBJS  := $(addprefix obj, $(SRC_NAME:.cpp=.o)) 
 
-
 DEPS := $(addprefix obj, $(SRC_NAME:.cpp=.d)) 
-INCLUDE := 
-LIB := 
-FLAGS := -g -fpermissive -Wextra -MMD -MP -w -DUNICODE -std=c++20 #-static-libgcc -static-libstdc++
+INCLUDE := -I./include
+LIB :=  -L./lib -lfreeglut -lopengl32 -lgdi32 -lwinmm
+FLAGS := -g -fpermissive -Wextra -MMD -MP -w -DUNICODE -std=c++20 -DFREEGLUT_STATIC #-static-libgcc -static-libstdc++
 ARGS := $(FLAGS)
 TARGET := automat
 .PHONY: all clear clear_all
@@ -18,7 +17,7 @@ rebuild: clear all
 
 build/$(TARGET).exe:  $(OBJS)
 	@mkdir -p build
-	g++ $(ARGS) $(OBJS) -o build/$(TARGET).exe $(LIB)
+	g++ $(ARGS) $(OBJS) $(LIB) -o build/$(TARGET).exe 
 
 obj/%.co: %.c
 	@mkdir -p $(dir $@)
