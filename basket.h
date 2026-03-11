@@ -1,3 +1,4 @@
+#pragma once
 #include<iostream>
 #include<vector>
 #include<algorithm>
@@ -14,9 +15,7 @@ public:
     double get_volume() { return volume; }
 };
 
-extern std::vector<item> buffer;
-
-class busket {
+class basket {
 private:
     double cur_volume = 0;
     std::vector<item> store;
@@ -24,11 +23,15 @@ private:
 public:
     static double max_volume;
 
-    busket() {};
+    basket() {};
 
     bool put(item i);
 
-    void trade(busket& other);
+    void clear();
 
-    busket& mutate();
-}
+    void trade(basket& other);
+
+    basket& mutate();
+
+    double get_volume();
+};
