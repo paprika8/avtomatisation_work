@@ -1,11 +1,11 @@
 #pragma once
 #include "basket.h"
+#include "basket_kit.h"
 #include <math.h>
 
 class environment {
 private:
-    int items_amount;
-    std::vector<basket> baskets;
+    std::vector<basket_kit> basket_kits;
     int rep_limit = 100;
     int count = 100;
 
@@ -18,7 +18,7 @@ private:
     void reproduction();
 
 public:
-    static std::vector<item> buffer;
+    //static std::vector<item> buffer;
 
     environment(std::string file_path);
 
