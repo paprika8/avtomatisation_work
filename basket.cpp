@@ -2,7 +2,7 @@
 #include "environment.h"
 
 double basket::max_volume = 100;
-
+int item::target_id = 1;
 bool basket::put(item i) {
     if (cur_volume + i.get_volume() > max_volume) return false;
     this->store.push_back(i);
@@ -16,7 +16,8 @@ void basket::clear() {
     store.clear();
 }
 
-void basket::trade(basket& other) {
+std::vector<item> &basket::trade(basket& other) {
+    std::vector<item> buffer;
     std::vector<item> items;
 
     for (int i = 0; i < store.size(); i++) {
@@ -33,8 +34,13 @@ void basket::trade(basket& other) {
     for (int i = 0; i < items.size(); i++) {
         if (!this->put(items[i]))
             if (!other.put(items[i]))
-                environment::buffer.push_back(items[i]);
+                buffer.push_back(items[i]);
     }
+    return buffer;
+}
+
+void basket::remoteItem(item i) {
+    store.erase(std::find(store.begin(), store.end(), i));
 }
 
 basket& basket::mutate() {
@@ -55,4 +61,8 @@ basket& basket::mutate() {
 
 double basket::get_volume() {
     return cur_volume;
+}
+
+int item::operator==(item& o) {
+    return id == o.id;
 }

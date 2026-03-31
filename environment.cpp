@@ -6,9 +6,9 @@ double getLrand(double l) {
 }
 
 void environment::ranging() {
-    std::sort(basket_kits.begin(), basket_kits.end(), [](basket_kit b1, basket_kit b2) -> {
+    std::sort(basket_kits.begin(), basket_kits.end(), [](basket_kit b1, basket_kit b2) -> int{
         return b2.size() - b1.size();
-    })
+    });
 }
 
 void environment::rejection() {

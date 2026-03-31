@@ -1,4 +1,4 @@
-#include <iostream>
+/*#include <iostream>
 #include <math.h>
 
 #include "easy_plot.hpp"
@@ -24,4 +24,4 @@ void example(int argc, char* argv[]){
 	while (easy_plot::tools::Drawing::drawings.size()) { // ожидание окон графиков
 		std::this_thread::yield();
 	}
-}
+}*/
