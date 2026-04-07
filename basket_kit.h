@@ -1,6 +1,7 @@
 #pragma once
 #include "basket.h"
 #include<map>
+#include <utility>
 
 class basket_kit {
 private:
@@ -11,17 +12,21 @@ private:
 public:
     basket_kit(std::vector<item> items);
 
+    basket_kit(const basket_kit& other);
+
+    basket_kit(basket_kit &&other);
+
     int size();
 
-    basket_kit trade(basket_kit other);
+    std::pair<basket_kit, basket_kit> trade(basket_kit other);
 
     void mutate();
 
-    basket_kit& operator=(basket_kit& other){
-        items_amount = other.items_amount;
-        items = other.items;
-        baskets = other.baskets;
-    }
+    void validate();
 
+    basket_kit& operator=(basket_kit& other);
 
+    basket_kit& operator=(basket_kit&& other);
+
+    // Конструктор копий, конструктор перемещений и оператор перемещения
 };

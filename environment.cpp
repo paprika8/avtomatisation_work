@@ -6,9 +6,9 @@ double getLrand(double l) {
 }
 
 void environment::ranging() {
-    std::sort(basket_kits.begin(), basket_kits.end(), [](basket_kit b1, basket_kit b2) -> int{
+    std::sort(basket_kits.begin(), basket_kits.end(), [](basket_kit &b1, basket_kit &b2) -> int {
         return b2.size() - b1.size();
-    });
+        });
 }
 
 void environment::rejection() {
@@ -27,8 +27,9 @@ void environment::reproduction() {
         int index1 = 0; // TO DO: random
         int index2 = 1;
 
-        basket_kit new_ans = basket_kits[index1].trade(basket_kits[index2]);
-        basket_kits.push_back(new_ans);
+        std::pair<basket_kit, basket_kit> new_ans = basket_kits[index1].trade(basket_kits[index2]);
+        basket_kits.push_back(new_ans.first);
+        basket_kits.push_back(new_ans.second);
     }
 }
 
@@ -54,18 +55,30 @@ environment::environment(std::string file_path) {
 }
 
 int environment::iteration() {
-    int min_basket_amount = basket_kits.size();
+    int min_basket_amount = basket_kits[0].size();
+    basket_kit min_basket_kit = basket_kits[0];
     ranging();
 
     while (check_solution()) {
         reproduction();
+        for (int i = 0; i< 10; i++){
+            int index = rand() % basket_kits.size();
+            basket_kits[index].mutate();
+        }
+        for (int i = 0; i< basket_kits.size(); i++){
+            basket_kits[i].validate();
+        }
         ranging();
         rejection();
-        if (basket_kits.size() < min_basket_amount) {
-            min_basket_amount = basket_kits.size();
+        for (int i = 0; i < basket_kits.size(); i++) {
+            if (basket_kits[i].size() < min_basket_amount) {
+                min_basket_amount = basket_kits[i].size();
+                min_basket_kit = basket_kits[i];
+            }
         }
-        count--;
-    }
 
-    return min_basket_amount;
+        count--;
+        return min_basket_amount;
+ 
+    }
 }
