@@ -6,7 +6,7 @@ basket_kit::basket_kit(std::vector<item> items) {
         return rand() % items.size();
         });
 
-    for (int i = 0; i <= items.size(); i++) {
+    for (int i = 0; i < items.size(); i++) {
         if (baskets.size() == 0 || !baskets.back().put(items[i])) {
             baskets.push_back(basket());
             baskets.back().put(items[i]);

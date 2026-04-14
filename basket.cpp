@@ -103,11 +103,13 @@ item& item::operator=(const item& other) {
     id = other.id;
     volume = other.volume;
     bask = other.bask;
+    return *this;
 }
 item& item::operator=(item&& other) {
     id = other.id;
     volume = other.volume;
     bask = other.bask;
+    return *this;
 }
 int item::operator==(const item& o) {
     return id == o.id;
