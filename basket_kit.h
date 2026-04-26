@@ -5,11 +5,11 @@
 
 class basket_kit {
 private:
-    int items_amount;
-    std::vector<basket> baskets;
     std::vector<item> items;
 
 public:
+    std::vector<basket*> baskets;
+    
     basket_kit(std::vector<item> items);
 
     basket_kit(const basket_kit& other);
@@ -28,5 +28,5 @@ public:
 
     basket_kit& operator=(basket_kit&& other);
 
-    // Конструктор копий, конструктор перемещений и оператор перемещения
+    void print();
 };

@@ -2,20 +2,26 @@
 #include "environment.h"
 
 double basket::max_volume = 100;
-int item::target_id = 1;
 
 basket::basket(const basket& other)
-    : cur_volume(other.cur_volume)
-    , store(other.store)  // Вектор копируется (глубокая копия всех item)
 {
-    // При копировании вектора вызывается конструктор копирования item,
-    // который создаёт новые id для каждого скопированного item
+    cur_volume = 0;
+    store.clear();
+    for (int i = 0; i < other.store.size(); ++i)
+    {
+        item ii = other.store[i];
+        put(ii);
+    }
 }
 
-bool basket::put(item i) {
+basket::basket() {
+}
+
+bool basket::put(item &i) {
     if (cur_volume + i.get_volume() > max_volume) return false;
     this->store.push_back(i);
     cur_volume += i.get_volume();
+    i.bask = this;
     return true;
 
 }
@@ -25,7 +31,7 @@ void basket::clear() {
     store.clear();
 }
 
-std::vector<item> &basket::trade(basket& other) {
+std::vector<item> basket::trade(basket& other) {
     std::vector<item> buffer;
     std::vector<item> items;
 
@@ -40,6 +46,8 @@ std::vector<item> &basket::trade(basket& other) {
         return rand() % items.size();
         });
 
+    this->clear();
+    other.clear();
     for (int i = 0; i < items.size(); i++) {
         if (!this->put(items[i]))
             if (!other.put(items[i]))
@@ -75,8 +83,13 @@ double basket::get_volume() {
 
 basket& basket::operator=(const basket& other) {
     if (this != &other) {
-        cur_volume = other.cur_volume;
-        store = other.store;  // При копировании вектора вызывается конструктор копирования item
+        cur_volume = 0;
+        store.clear();
+        for (int i = 0; i < other.store.size(); ++i)
+        {
+            item ii = other.store[i];
+            put(ii);
+        }
     }
     return *this;
 }
@@ -84,7 +97,7 @@ basket& basket::operator=(const basket& other) {
 
 // Конструктор копирования
 item::item(const item& other) 
-    : id(target_id++)           // Новый уникальный id для копии
+    : id(other.id)           // Новый уникальный id для копии
     , volume(other.volume)      // Копируем объем
     , bask(other.bask)          // Копируем указатель на корзину (неглубоко)
 {
@@ -93,7 +106,7 @@ item::item(const item& other)
 
 // Конструктор перемещения
 item::item(item&& other)
-    : id(target_id++)                                    // Новый id для перемещённого объекта
+    : id(other.id)                                    // Новый id для перемещённого объекта
     , volume(std::exchange(other.volume, 0.0))          // Забираем volume, у other оставляем 0
     , bask(std::exchange(other.bask, nullptr))          // Забираем указатель, у other оставляем nullptr
 {
@@ -129,4 +142,18 @@ basket& basket::operator=(basket&& other) {
         store = std::move(other.store);
     }
     return *this;
+}
+
+item::item(double v, int _id) {
+    volume = v;
+    id = _id;
+    if(id == -1) printf("!@!@#$$\n");
+}
+
+void basket::print() {
+    printf("| ");
+    for(int i = 0; i < store.size(); ++i){
+        printf("%d-%lf ", store[i].id, store[i].get_volume());
+    }
+    printf("|\n");
 }

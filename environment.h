@@ -6,8 +6,8 @@
 class environment {
 private:
     std::vector<basket_kit> basket_kits;
-    int rep_limit = 100;
-    int count = 100;
+    int rep_limit = 10;
+    int count = 10;
 
     void ranging();
 

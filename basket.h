@@ -8,16 +8,13 @@ class basket;
 
 class item {
 private:
-    static int target_id;
 
     double volume;
 
 public:
     basket* bask;
     int id;
-    item(double v) : id(target_id++) {
-        volume = v;
-    }
+    item(double v, int id = -1);
 
     item(const item& other);
 
@@ -40,16 +37,16 @@ public:
     std::vector<item> store;
     static double max_volume;
 
-    basket() {};
+    basket();
 
 
     basket(const basket& other);
 
-    bool put(item i);
+    bool put(item &i);
 
     void clear();
 
-    std::vector<item>& trade(basket& other);
+    std::vector<item> trade(basket& other);
 
     void remoteItem(item i);
 
@@ -62,4 +59,7 @@ public:
     basket& operator=(const basket& other);
 
     basket& operator=(basket&& other);
+
+    
+    void print();
 };

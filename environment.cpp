@@ -6,9 +6,25 @@ double getLrand(double l) {
 }
 
 void environment::ranging() {
-    std::sort(basket_kits.begin(), basket_kits.end(), [](basket_kit &b1, basket_kit &b2) -> int {
-        return b2.size() - b1.size();
-        });
+    int n = basket_kits.size();
+    for (int i = 0; i < n - 1; i++) {
+        // Флаг для оптимизации: если обмена не было, массив уже отсортирован
+        bool swapped = false;
+        
+        for (int j = 0; j < n - i - 1; j++) {
+            if (basket_kits[j].size() > basket_kits[j + 1].size()) {
+                // Меняем элементы местами
+                std::swap(basket_kits[j], basket_kits[j + 1]);
+                swapped = true;
+            }
+        }
+        
+        // Если за проход ни одного обмена не было — массив отсортирован
+        if (!swapped) break;
+    }
+//    std::sort(basket_kits.begin(), basket_kits.end(), [](basket_kit &b1, basket_kit &b2) -> int {
+//        return b2.size() - b1.size();
+//        });
 }
 
 void environment::rejection() {
@@ -37,14 +53,15 @@ void environment::reproduction() {
 environment::environment(std::string file_path) {
     int items_amount;
     FILE* file = fopen(file_path.c_str(), "r");
-    fscanf(file, "%llf", &basket::max_volume);
+    fscanf(file, "%lf", &basket::max_volume);
     fscanf(file, "%d", &items_amount);
 
     std::vector<item> items;
     for (int i = 0; i < items_amount; i++) {
         double volume;
-        fscanf(file, "%llf", &volume);
+        fscanf(file, "%lf", &volume);
         items.push_back(volume);
+        items[i].id = i;
     }
 
     int kit_amount;
@@ -70,15 +87,20 @@ int environment::iteration() {
         }
         ranging();
         rejection();
+        printf(" ==ITERATION %d==\n", count);
         for (int i = 0; i < basket_kits.size(); i++) {
-            if (basket_kits[i].size() < min_basket_amount) {
-                min_basket_amount = basket_kits[i].size();
-                min_basket_kit = basket_kits[i];
-            }
+            basket_kits[0].print();
         }
 
+        if (basket_kits[0].size() < min_basket_amount) {
+                min_basket_amount = basket_kits[0].size();
+                min_basket_kit = basket_kits[0];
+            }
+
         count--;
-        return min_basket_amount;
- 
     }
+
+    printf("Best kit!!!\n");
+    min_basket_kit.print();
+    return min_basket_amount;
 }
